@@ -1,0 +1,8 @@
+canvas {
+  outline: black 2px solid;
+}
+
+#canvas-container {
+  display: flex;
+  justify-content: center;
+}
