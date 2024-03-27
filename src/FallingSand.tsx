@@ -51,13 +51,14 @@ export default function FallingSand(props: FallingSandProps) {
 
             // Draw
             gridRef.current.grid.forEach((color, index) => {
-                if (color === 0) return;
-
                 const [x, y] = gridRef.current.canvasPosition(index);
+
+                const cellColor: string = color === 0 ? "white" : "black";
 
                 canvasContext.beginPath();
                 canvasContext.rect(x, y, cellSize, cellSize);
-                canvasContext.fillStyle = "black";
+                canvasContext.fillStyle = cellColor;
+                canvasContext.strokeStyle = cellColor;
                 canvasContext.fill();
                 canvasContext.stroke();
             });

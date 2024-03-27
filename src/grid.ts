@@ -41,10 +41,18 @@ export default class Grid {
     }
 
     updatePixel(index: number) {
+        // Get the indices of the pixels directly below
         const below = index + this.width;
-        // If there are no pixels below, move it down.
+        const belowLeft = below - 1;
+        const belowRight = below + 1;
+
+        // If there are no pixels below, including diagonals, move it accordingly.
         if (this.isEmpty(below)) {
             this.swap(index, below);
+        } else if (this.isEmpty(belowLeft)) {
+            this.swap(index, belowLeft);
+        } else if (this.isEmpty(belowRight)) {
+            this.swap(index, belowRight);
         }
     }
 
