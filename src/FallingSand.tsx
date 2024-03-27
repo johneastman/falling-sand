@@ -31,7 +31,7 @@ export default function FallingSand(props: FallingSandProps) {
 
     const startSand = (position: Position) => {
         currentMousePosition.current = position;
-        repeat.current = setInterval(() => placeCell(), 100);
+        repeat.current = setInterval(() => placeCell(), 50);
     };
 
     const stopSand = (_: Position) => {
@@ -71,26 +71,24 @@ export default function FallingSand(props: FallingSandProps) {
 
         let animationFrame: number;
         const main = () => {
-            const canvasContext = context;
-            if (canvasContext === undefined) return;
-
             // Draw
             gridRef.current.grid.forEach((color, index) => {
                 const [x, y] = gridRef.current.canvasPosition(index);
 
                 const cellColor: string = color === 0 ? "white" : "tan";
 
-                canvasContext.beginPath();
-                canvasContext.rect(x, y, cellSize, cellSize);
-                canvasContext.fillStyle = cellColor;
-                canvasContext.strokeStyle = cellColor;
-                canvasContext.fill();
-                canvasContext.stroke();
+                context.beginPath();
+                context.rect(x, y, cellSize, cellSize);
+                context.fillStyle = cellColor;
+                context.strokeStyle = cellColor;
+                context.fill();
+                context.stroke();
             });
 
             // Update
             gridRef.current.update();
 
+            // Next Frame
             animationFrame = requestAnimationFrame(main);
         };
 

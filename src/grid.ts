@@ -58,8 +58,7 @@ export default class Grid {
 
     update() {
         // Go through each pixel one by one and apply the rule
-        for (let i = this.grid.length - this.width - 1; i > 0; i--) {
-            this.updatePixel(i);
-        }
+        for (let index = this.grid.length - this.width - 1; index > 0; index--)
+            this.updatePixel(index);
     }
 }
