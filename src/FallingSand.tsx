@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import "./FallingSand.css";
+import Grid from "./grid";
 
 interface FallingSandProps {
     canvasWidth: number;
@@ -10,18 +11,13 @@ interface FallingSandProps {
 export default function FallingSand(props: FallingSandProps) {
     const { canvasWidth, canvasHeight, cellSize } = props;
 
-    const gridWidth: number = Math.floor(canvasWidth / cellSize);
-    const gridHeight: number = Math.floor(canvasHeight / cellSize);
-
-    const isMouseDown = useRef<boolean>(false);
-    const gridRef = useRef<number[]>(new Array(gridWidth * gridHeight).fill(0));
-
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const context = useRef<CanvasRenderingContext2D>();
+    const isMouseDown = useRef<boolean>(false);
+    const gridRef = useRef<Grid>(new Grid(canvasWidth, canvasHeight, cellSize));
 
     useEffect(() => {
         const canvas = canvasRef.current!;
-        context.current = canvas.getContext("2d")!;
+        const context = canvas.getContext("2d")!;
 
         // Function to draw a circle where the user clicks
         const placeCell = (event: MouseEvent) => {
@@ -29,18 +25,10 @@ export default function FallingSand(props: FallingSandProps) {
 
             if (!isMouseDown.current) return;
 
-            console.log("Placing cell...");
-
             const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-
-            const gridX: number = Math.floor(x / cellSize);
-            const gridY: number = Math.floor(y / cellSize);
-
-            const newGrid = Array.from(gridRef.current);
-            newGrid[gridY * gridWidth + gridX] = 1;
-            gridRef.current = newGrid;
+            gridRef.current.set(x, y, 1);
         };
 
         const setMouseDown = (_: MouseEvent) => {
@@ -52,23 +40,20 @@ export default function FallingSand(props: FallingSandProps) {
         };
 
         // Add the event listener
+        canvas.addEventListener("mousemove", placeCell);
         canvas.addEventListener("mousedown", setMouseDown);
         canvas.addEventListener("mouseup", setMouseUp);
-        canvas.addEventListener("mousemove", placeCell);
 
         let animationFrame: number;
         const main = () => {
-            const grid: number[] = gridRef.current;
-
-            const canvasContext = context.current;
+            const canvasContext = context;
             if (canvasContext === undefined) return;
 
             // Draw
-            grid.forEach((color, index) => {
+            gridRef.current.grid.forEach((color, index) => {
                 if (color === 0) return;
 
-                const x: number = (index % gridWidth) * cellSize;
-                const y: number = Math.floor(index / gridWidth) * cellSize;
+                const [x, y] = gridRef.current.canvasPosition(index);
 
                 canvasContext.beginPath();
                 canvasContext.rect(x, y, cellSize, cellSize);
@@ -76,6 +61,9 @@ export default function FallingSand(props: FallingSandProps) {
                 canvasContext.fill();
                 canvasContext.stroke();
             });
+
+            // Update
+            gridRef.current.update();
 
             animationFrame = requestAnimationFrame(main);
         };
