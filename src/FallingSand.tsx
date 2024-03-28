@@ -45,7 +45,7 @@ export default function FallingSand(props: FallingSandProps) {
      */
     const placeCell = () => {
         const { x, y } = currentMousePosition.current;
-        gridRef.current.set(x, y, 1);
+        gridRef.current.setCircle(x, y, 2, 1);
     };
 
     useEffect(() => {
@@ -65,7 +65,7 @@ export default function FallingSand(props: FallingSandProps) {
             (position: Position) => (currentMousePosition.current = position)
         );
 
-        // Add the event listener
+        // Add the event listeners
         canvas.addEventListener("mousemove", mouseMove);
         canvas.addEventListener("mousedown", mouseDown);
         canvas.addEventListener("mouseup", mouseUp);
@@ -77,7 +77,7 @@ export default function FallingSand(props: FallingSandProps) {
             gridRef.current.grid.forEach((color, index) => {
                 const [x, y] = gridRef.current.canvasPosition(index);
 
-                const cellColor: string = color === 0 ? "white" : "tan";
+                const cellColor: string = color === 0 ? "#ffffff" : "#dcb159";
 
                 context.beginPath();
                 context.rect(x, y, cellSize, cellSize);
