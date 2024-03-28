@@ -54,6 +54,7 @@ export default function FallingSand(props: FallingSandProps) {
 
         const mouseDown = mouseEventFactory(canvas, startSand);
         const mouseUp = mouseEventFactory(canvas, stopSand);
+        const mouseLeave = mouseEventFactory(canvas, stopSand);
 
         /**
          * When the mouse moves, change where sand is dropped without
@@ -68,6 +69,7 @@ export default function FallingSand(props: FallingSandProps) {
         canvas.addEventListener("mousemove", mouseMove);
         canvas.addEventListener("mousedown", mouseDown);
         canvas.addEventListener("mouseup", mouseUp);
+        canvas.addEventListener("mouseleave", mouseLeave);
 
         let animationFrame: number;
         const main = () => {
@@ -100,14 +102,26 @@ export default function FallingSand(props: FallingSandProps) {
             canvas.removeEventListener("mousemove", mouseMove);
             canvas.removeEventListener("mousedown", mouseDown);
             canvas.removeEventListener("mouseup", mouseUp);
+            canvas.removeEventListener("mouseleave", mouseLeave);
 
             cancelAnimationFrame(animationFrame);
         };
     }, []);
 
     return (
-        <div id="canvas-container">
-            <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
-        </div>
+        <>
+            <div id="canvas-container">
+                <canvas
+                    ref={canvasRef}
+                    width={canvasWidth}
+                    height={canvasHeight}
+                />
+                <div>
+                    <button onClick={() => gridRef.current.clear()}>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </>
     );
 }
