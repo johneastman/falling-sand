@@ -85,6 +85,21 @@ export default class Grid {
         }
     }
 
+    draw(context: CanvasRenderingContext2D) {
+        this.grid.forEach((color, index) => {
+            const [x, y] = this.canvasPosition(index);
+
+            const cellColor: string = color === 0 ? "#ffffff" : "#dcb159";
+
+            context.beginPath();
+            context.rect(x, y, this.cellSize, this.cellSize);
+            context.fillStyle = cellColor;
+            context.strokeStyle = cellColor;
+            context.fill();
+            context.stroke();
+        });
+    }
+
     update() {
         // Go through each pixel one by one and apply the rule
         for (let index = this.grid.length - this.width - 1; index >= 0; index--)

@@ -74,18 +74,7 @@ export default function FallingSand(props: FallingSandProps) {
         let animationFrame: number;
         const main = () => {
             // Draw
-            gridRef.current.grid.forEach((color, index) => {
-                const [x, y] = gridRef.current.canvasPosition(index);
-
-                const cellColor: string = color === 0 ? "#ffffff" : "#dcb159";
-
-                context.beginPath();
-                context.rect(x, y, cellSize, cellSize);
-                context.fillStyle = cellColor;
-                context.strokeStyle = cellColor;
-                context.fill();
-                context.stroke();
-            });
+            gridRef.current.draw(context);
 
             // Update
             gridRef.current.update();
